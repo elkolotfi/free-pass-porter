@@ -1,0 +1,171 @@
+.App {
+  text-align: center;
+  padding: 2rem;
+  font-family: Arial, sans-serif;
+}
+
+.home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.select-container {
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 1rem;
+  z-index: 2;
+}
+
+.passport-select {
+  font-size: 1rem;
+}
+
+.passport-select__control {
+  min-height: 50px;
+}
+
+.passport-select__value-container {
+  padding: 8px 12px;
+}
+
+.passport-select__multi-value {
+  background-color: #e0e0e0;
+  border-radius: 16px;
+  padding: 2px 8px;
+}
+
+.passport-select__multi-value__label {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.passport-select__multi-value__remove {
+  color: #666;
+}
+
+.country-option {
+  display: flex;
+  align-items: center;
+}
+
+.country-flag {
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.country-name {
+  font-size: 1rem;
+}
+
+.results-container {
+  overflow-x: auto;
+  width: 100%;
+  max-height: 70vh; /* Adjust this value as needed */
+  position: relative;
+}
+
+.access-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: center;
+}
+
+.access-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.access-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+  padding: 12px 8px;
+  border: 1px solid #ddd;
+  border-bottom: 2px solid #ddd; /* Add a slightly thicker bottom border */
+}
+
+.access-table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  height: 40px; /* Adjust this value as needed */
+}
+
+/* Add this to ensure proper border rendering */
+.access-table thead th::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Optional: Add some box-shadow for a subtle separation effect */
+.access-table thead {
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+}
+
+.access-table th,
+.access-table td {
+  border: 1px solid #ddd;
+}
+
+.access-table tr:nth-child(even) {
+  background-color: #f8f8f8;
+}
+.access-table tr:nth-child(odd) {
+  background-color: #ebebeb;
+}
+
+.country-search {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-top: none;
+  box-sizing: border-box;
+  z-index: 2;
+}
+
+/* Adjust the results container to accommodate the search input */
+.results-container {
+  padding-top: 40px; /* Adjust this value as needed */
+}
+
+@media (max-width: 600px) {
+  .access-table th,
+  .access-table td {
+    padding: 0.25rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .passport-select__control {
+    min-height: 44px;
+  }
+
+  .passport-select__value-container {
+    padding: 6px 10px;
+  }
+
+  .country-flag {
+    font-size: 1rem;
+  }
+
+  .country-name {
+    font-size: 0.9rem;
+  }
+}
