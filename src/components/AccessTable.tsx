@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { FaGlobeAfrica } from 'react-icons/fa';
 import { AccessType, formatAccess, getBestAccess, getCountryFlagAndName } from '../services/passport.service';
 import { CountryOption } from '../types/country-option.type';
@@ -11,6 +12,25 @@ interface AccessTableProps {
 }
 
 export function AccessTable({ accessResults, selectedCountries, searchTerm, onSearchChange }: AccessTableProps) {
+  const tableRef = useRef<HTMLTableElement>(null);
+  const headerRef = useRef<HTMLTableSectionElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (tableRef.current && headerRef.current) {
+        const tableRect = tableRef.current.getBoundingClientRect();
+        if (tableRect.top < 0) {
+          headerRef.current.style.transform = `translateY(${-tableRect.top}px)`;
+        } else {
+          headerRef.current.style.transform = 'translateY(0)';
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const filteredAccessResults = accessResults ? Object.fromEntries(
     Object.entries(accessResults).filter(([country]) =>
       getCountryFlagAndName(country).toLowerCase().includes(searchTerm.toLowerCase())
@@ -19,10 +39,10 @@ export function AccessTable({ accessResults, selectedCountries, searchTerm, onSe
 
   return (
     <div className="results-container">
-      <h2><FaGlobeAfrica /> World Wide Access</h2>
+      <h2><FaGlobeAfrica /> World Wide Visa/Free Access</h2>
       <div className="table-wrapper">
-        <table className="access-table">
-          <thead>
+        <table className="access-table" ref={tableRef}>
+          <thead ref={headerRef}>
             <tr>
               <th>
                 <input

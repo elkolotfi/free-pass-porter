@@ -68,18 +68,13 @@
 .country-name {
   font-size: 1rem;
 }
-
 .results-container {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+  overflow-x: auto;
 }
 
 .table-wrapper {
-  overflow-x: auto;
-  max-height: calc(100vh - 300px);
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .access-table {
@@ -87,40 +82,25 @@
   border-collapse: separate;
   border-spacing: 0;
   text-align: center;
-  background-color: white;
 }
 
 .access-table thead {
-  position: sticky;
-  top: 0;
+  background-color: #f2f2f2;
+  position: relative;
   z-index: 1;
 }
 
 .access-table th {
-  background-color: #f2f2f2;
   font-weight: bold;
   padding: 12px 8px;
   border: 1px solid #ddd;
   border-bottom: 2px solid #ddd;
+  background-color: #f2f2f2;
 }
 
 .access-table td {
   padding: 8px;
   border: 1px solid #ddd;
-  height: 40px;
-}
-
-.access-table thead th::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -1px;
-  width: 100%;
-  border-bottom: 1px solid #ddd;
-}
-
-.access-table thead {
-  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
 }
 
 .access-table tr:nth-child(even) {
@@ -135,9 +115,7 @@
   width: 100%;
   padding: 8px;
   border: 1px solid #ddd;
-  border-top: none;
   box-sizing: border-box;
-  z-index: 2;
 }
 
 .footer {
