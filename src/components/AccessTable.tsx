@@ -1,7 +1,7 @@
-import { AccessType, getBestAccess } from '../services/passport.service';
-import AccessTypeBadge from './AccessType';
-import { CountryOption } from '../types/country-option.type';
 import { FaGlobeAfrica } from 'react-icons/fa';
+import { AccessType, formatAccess, getBestAccess, getCountryFlagAndName } from '../services/passport.service';
+import { CountryOption } from '../types/country-option.type';
+import AccessTypeBadge from './AccessType';
 
 interface AccessTableProps {
   accessResults: { [country: string]: { [passport: string]: AccessType } } | null;

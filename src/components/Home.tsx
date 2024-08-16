@@ -1,24 +1,11 @@
-import { countries, getEmojiFlag, TCountryCode } from 'countries-list';
-import getCountryFlag from 'country-flag-icons/unicode';
 import { useEffect, useMemo, useState } from 'react';
-import Select from 'react-select';
-import AccessTypeBadge from './AccessType';
-import { AccessType, getBestAccess, getCountryAccessTypes, getPassportData, PassportData } from '../services/passport.service';
-import { FaPassport, FaPlane, FaGlobeAfrica } from 'react-icons/fa';
-
-
-interface CountryOption {
-  value: string;
-  label: string;
-  flag: string;
-}
-
-function formatAccess(access: AccessType): string {
-  if (typeof access === 'number') {
-    return `visa free (${access} days)`;
-  }
-  return access;
-}
+import { FaPassport, FaPlane } from 'react-icons/fa';
+import { countries } from 'countries-list';
+import getCountryFlag from 'country-flag-icons/unicode';
+import { AccessType, getCountryAccessTypes, getPassportData, PassportData } from '../services/passport.service';
+import { CountrySelect } from './CountrySelect';
+import { AccessTable } from './AccessTable';
+import { CountryOption } from '../types/country-option.type';
 
 export default function Home() {
   const [selectedCountries, setSelectedCountries] = useState<CountryOption[]>([]);
@@ -54,85 +41,21 @@ export default function Home() {
     }
   };
 
-  const getCountryFlagAndName = (country: string): string => {
-    const Tcountry = countries[country as keyof typeof countries];
-    return Tcountry ? `${getEmojiFlag(country as TCountryCode)} ${Tcountry.name}` : country;
-  }
-
-  const filteredAccessResults = useMemo(() => {
-    if (!accessResults) return null;
-    if (!searchTerm) return accessResults;
-
-    return Object.fromEntries(
-      Object.entries(accessResults).filter(([country]) =>
-        getCountryFlagAndName(country).toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
-  }, [accessResults, searchTerm]);
-
-  // const toggleSearch = () => {
-  //   setShowSearch(!showSearch);
-  //   setSearchTerm('');
-  // };
-
   return (
     <div className="home">
       <h1 className="title"><FaPlane /> Free Pass Porter <FaPassport /></h1>
-      <div className="select-container">
-        <Select
-          isMulti
-          options={availableCountries}
-          value={selectedCountries}
-          onChange={handleChange}
-          className="passport-select"
-          placeholder="Select countries passports..."
-          formatOptionLabel={(country) => (
-            <div className="country-option">
-              <span className="country-flag">{country.flag}</span>
-              <span className="country-name">{country.label}</span>
-            </div>
-          )}
-        />
-      </div>
+      <CountrySelect
+        availableCountries={availableCountries}
+        selectedCountries={selectedCountries}
+        onChange={handleChange}
+      />
       {accessResults && (
-        <div className="results-container">
-          <h2><FaGlobeAfrica /> World Wide Access</h2>
-          <table className="access-table">
-            <thead>
-              <tr>
-                <th>
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Search country..."
-                    className="country-search"
-                    autoFocus
-                  />
-                </th>
-                {selectedCountries.map(country => (
-                    <th key={country.value}>{country.flag}</th>
-                ))}
-                { selectedCountries.length > 1 && <th>{selectedCountries.map(country => country.flag).join(' + ')}</th> }
-              </tr>
-            </thead>
-            <tbody>
-              {Object.entries(filteredAccessResults || {}).map(([country, accessTypes]) => (
-                <tr key={country}>
-                  <td>{getCountryFlagAndName(country)}</td>
-                  {selectedCountries.map((selectedCountry: CountryOption) => (
-                    <td key={selectedCountry.value}>
-                      <AccessTypeBadge access={formatAccess(accessTypes[selectedCountry.value] || 'N/A')} />
-                    </td>
-                  ))}
-                  { selectedCountries.length > 1 && <td>
-                    <AccessTypeBadge access={formatAccess(getBestAccess(Object.values(accessTypes)))} />
-                  </td>}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <AccessTable
+          accessResults={accessResults}
+          selectedCountries={selectedCountries}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+        />
       )}
     </div>
   );

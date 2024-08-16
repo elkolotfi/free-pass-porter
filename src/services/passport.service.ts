@@ -1,3 +1,4 @@
+import { countries, getEmojiFlag, TCountryCode } from 'countries-list';
 import Papa from 'papaparse';
 
 const PASSPORT_FILE_PATH = '/src/data/passport-index-matrix-iso2.csv';
@@ -66,4 +67,16 @@ export function getBestAccess(accessTypes: AccessType[]): AccessType {
     const currentIndex = ORDERED_ACCESS_TYPES.indexOf(current);
     return bestIndex < currentIndex ? best : current;
   });
+}
+
+export function getCountryFlagAndName (country: string): string {
+  const Tcountry = countries[country as keyof typeof countries];
+  return Tcountry ? `${getEmojiFlag(country as TCountryCode)} ${Tcountry.name}` : country;
+}
+
+export function formatAccess(access: AccessType): string {
+  if (typeof access === 'number') {
+    return `visa free (${access} days)`;
+  }
+  return access;
 }
