@@ -1,17 +1,11 @@
+import { accessTypes } from "../types/access-option.type";
+
 interface AccessTypeProps {
   access: string;
 }
 
-const accessTypeColors: { [key: string]: string } = {
-  'citizen': '#4CAF50',
-  'visa free': '#8BC34A',
-  'visa on arrival': '#6bd38c',
-  'e-visa': '#FFC107',
-  'visa required': '#FF5722',
-};
-
-export default function AccessType({ access }: AccessTypeProps) {
-  const backgroundColor = accessTypeColors[access.split('(')[0].trim()] || '#9E9E9E';
+export default function AccessTypeShow({ access }: AccessTypeProps) {
+  const backgroundColor = accessTypes[access.split('(')[0].trim()] || '#9E9E9E';
 
   return (
     <div

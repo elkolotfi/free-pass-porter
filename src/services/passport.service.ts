@@ -1,5 +1,8 @@
 import { countries, getEmojiFlag, TCountryCode } from 'countries-list';
 import Papa from 'papaparse';
+import { AccessResultsType } from '../components/AccessResults';
+import { TableFilters } from '../components/AccessTableFilter';
+import { CountryOption } from '../types/country-option.type';
 
 const PASSPORT_FILE_PATH = '/src/data/passport-index-matrix-iso2.csv';
 export const ORDERED_ACCESS_TYPES = ['citizen', 'visa free', 'visa on arrival', 'e-visa', 'visa required'];
@@ -9,6 +12,8 @@ export interface PassportData {
 }
 
 export type AccessType = number | string;
+
+export type FilteredResultsType = [string, { [passport: string]: AccessType; }];
 
 export async function getPassportData(): Promise<PassportData> {
   const response = await fetch(PASSPORT_FILE_PATH);
@@ -31,8 +36,8 @@ function parseAccess(access: string): AccessType {
   return isNaN(num) ? access : num;
 }
 
-export function getCountryAccessTypes(passports: string[], data: PassportData): { [country: string]: { [passport: string]: AccessType } } {
-  const accessTypes: { [country: string]: { [passport: string]: AccessType } } = {};
+export function getCountryAccessTypes(passports: string[], data: PassportData): AccessResultsType {
+  const accessTypes: AccessResultsType = {};
 
   passports.forEach(passport => {
     const passportData = data[passport];
@@ -50,7 +55,6 @@ export function getCountryAccessTypes(passports: string[], data: PassportData): 
     }
     accessTypes[passport][passport] = 'citizen';
   });
-
   return accessTypes;
 }
 
@@ -79,4 +83,45 @@ export function formatAccess(access: AccessType): string {
     return `visa free (${access} days)`;
   }
   return access;
+}
+
+export function filterAccessResults(
+  accessResults: AccessResultsType,
+  tableFilters: TableFilters,
+  selectedCountries: CountryOption[]
+): FilteredResultsType[] | null {
+  if (!accessResults) {
+    return null;
+  }
+
+  const filtered = Object.entries(accessResults).reduce((acc, [country, passports]) => {
+    // Filter by countries
+    if (tableFilters.countries.length > 0 && !tableFilters.countries.some(c => c.value === country)) {
+      return acc;
+    }
+
+    // Filter by access types
+    const filteredPassports = Object.entries(passports).reduce((passAcc, [passport, accessType]) => {
+      const accessFilters = tableFilters.accessFilters[passport];
+      if (accessFilters && accessFilters.length > 0) {
+        if (accessFilters.some(filter => filter.value === accessType || filter.value === 'visa free' && typeof accessType === 'number')) {
+          passAcc[passport] = accessType;
+        }
+      } else {
+        passAcc[passport] = accessType;
+      }
+      return passAcc;
+    }, {} as { [passport: string]: AccessType });
+
+    // Only add the country if there are filtered passports
+    if (Object.keys(filteredPassports).length > 0) {
+      acc[country] = filteredPassports;
+    }
+
+    return acc;
+  }, {} as AccessResultsType);
+  return Object.entries(filtered).filter(([_, accessTypes]) => {
+    const passports = Object.entries(accessTypes).map(([passport, _]) => passport);
+    return !selectedCountries.some(selectedCountry => !passports.includes(selectedCountry.value));
+  });
 }

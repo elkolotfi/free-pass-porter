@@ -1,13 +1,18 @@
 import Select, { StylesConfig } from 'react-select';
 import { CountryOption } from '../types/country-option.type';
+import { useEffect, useMemo, useState } from 'react';
+import { countries } from 'countries-list';
+import getCountryFlag from 'country-flag-icons/unicode';
 
 interface CountrySelectProps {
-  availableCountries: CountryOption[];
-  selectedCountries: CountryOption[];
   onChange: (selected: readonly CountryOption[]) => void;
+  reload?: number;
+  placeholder?: string;
 }
 
-export function CountrySelect({ availableCountries, selectedCountries, onChange }: CountrySelectProps) {
+export function CountrySelect({ onChange, reload = 0, placeholder = 'Select your passports countries...' }: CountrySelectProps) {
+  const [selectedCountries, setSelectedCountries] = useState<CountryOption[]>([]);
+
   const customStyles: StylesConfig<CountryOption, true> = {
     control: (provided) => ({
       ...provided,
@@ -17,6 +22,34 @@ export function CountrySelect({ availableCountries, selectedCountries, onChange 
       ...provided,
       cursor: 'pointer',
     }),
+    menu: (provided) => ({
+      ...provided,
+      zIndex: 2,
+    }),
+  };
+
+  useEffect(() => {
+    setSelectedCountries([]);
+    onChange([]);
+  }, [reload]);
+
+  const countryList: CountryOption[] = useMemo(() => {
+    return Object.entries(countries).map(([code, country]) => ({
+      value: code,
+      label: country.name,
+      flag: getCountryFlag(code),
+    }));
+  }, []);
+
+  const availableCountries = useMemo(() => {
+    return countryList.filter(
+      (country) => !selectedCountries.some((selected) => selected.value === country.value)
+    );
+  }, [countryList, selectedCountries]);
+
+  const handleChange = (selected: readonly CountryOption[]) => {
+    setSelectedCountries(selected as CountryOption[]);
+    onChange(selected);
   };
   
   return (
@@ -25,9 +58,9 @@ export function CountrySelect({ availableCountries, selectedCountries, onChange 
         isMulti
         options={availableCountries}
         value={selectedCountries}
-        onChange={onChange}
+        onChange={handleChange}
         className="passport-select"
-        placeholder="Select your passports countries..."
+        placeholder={placeholder}
         formatOptionLabel={(country) => (
           <div className="country-option">
             <span className="country-flag">{country.flag}</span>
@@ -36,9 +69,6 @@ export function CountrySelect({ availableCountries, selectedCountries, onChange 
         )}
         styles={customStyles}
       />
-      { selectedCountries.length < 1 && 
-        <p>Select the passports you own or want to own and see places you can freely travel to 😌</p>
-      }
     </div>
   );
 }

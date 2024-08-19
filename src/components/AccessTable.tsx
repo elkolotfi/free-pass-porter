@@ -1,17 +1,20 @@
-import { useEffect, useRef } from 'react';
-import { FaGlobeAfrica } from 'react-icons/fa';
-import { AccessType, formatAccess, getBestAccess, getCountryFlagAndName } from '../services/passport.service';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { AccessType, filterAccessResults, formatAccess, getBestAccess, getCountryFlagAndName } from '../services/passport.service';
 import { CountryOption } from '../types/country-option.type';
-import AccessTypeBadge from './AccessType';
+import AccessTableFilter, { TableFilters } from './AccessTableFilter';
+import AccessTypeBadge from './AccessTypeShow';
+import { AccessResultsType } from './AccessResults';
 
 interface AccessTableProps {
-  accessResults: { [country: string]: { [passport: string]: AccessType } } | null;
+  accessResults: AccessResultsType;
   selectedCountries: CountryOption[];
-  searchTerm: string;
-  onSearchChange: (value: string) => void;
 }
 
-export function AccessTable({ accessResults, selectedCountries, searchTerm, onSearchChange }: AccessTableProps) {
+export function AccessTable({ accessResults, selectedCountries }: AccessTableProps) {
+  const [tableFilters, setTableFilters] = useState<TableFilters>({
+    countries: [], accessFilters: {}
+  });
+
   const tableRef = useRef<HTMLTableElement>(null);
   const headerRef = useRef<HTMLTableSectionElement>(null);
 
@@ -31,52 +34,55 @@ export function AccessTable({ accessResults, selectedCountries, searchTerm, onSe
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const filteredAccessResults = accessResults ? Object.fromEntries(
-    Object.entries(accessResults).filter(([country]) =>
-      getCountryFlagAndName(country).toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  ) : null;
+  const filteredAccessResults = useMemo(() => {
+    return filterAccessResults(accessResults, tableFilters, selectedCountries);
+  }, [tableFilters]);
+
+
+  const countDestinations = useMemo(() => {
+    return filteredAccessResults ? Object.keys(filteredAccessResults).length : 0
+  }, [filteredAccessResults]);
+
+  function getTableFilters(filters: TableFilters) {
+    setTableFilters(filters);
+  }
 
   return (
-    <div className="results-container">
-      <h2><FaGlobeAfrica /> World Wide Visa/Free Access</h2>
-      <div className="table-wrapper">
-        <table className="access-table" ref={tableRef}>
-          <thead ref={headerRef}>
-            <tr>
-              <th>
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => onSearchChange(e.target.value)}
-                  placeholder="Search country..."
-                  className="country-search"
-                  autoFocus
-                />
-              </th>
-              {selectedCountries.map(country => (
-                <th key={country.value}>{country.flag}</th>
-              ))}
-              {selectedCountries.length > 1 && <th>{selectedCountries.map(country => country.flag).join(' + ')}</th>}
-            </tr>
-          </thead>
-          <tbody>
-            {Object.entries(filteredAccessResults || {}).map(([country, accessTypes]) => (
-              <tr key={country}>
-                <td>{getCountryFlagAndName(country)}</td>
-                {selectedCountries.map((selectedCountry: CountryOption) => (
-                  <td key={selectedCountry.value}>
-                    <AccessTypeBadge access={formatAccess(accessTypes[selectedCountry.value] || 'N/A')} />
-                  </td>
-                ))}
-                {selectedCountries.length > 1 && <td>
-                  <AccessTypeBadge access={formatAccess(getBestAccess(Object.values(accessTypes)))} />
-                </td>}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div className="table-wrapper">
+      <div className="filter-wrapper">
+        <AccessTableFilter selectedCountries={selectedCountries} getTableFilters={getTableFilters} />
       </div>
+      <table className="access-table" ref={tableRef}>
+        <thead ref={headerRef}>
+          <tr>
+            <th>
+              Destination Country ({countDestinations})
+            </th>
+            {selectedCountries.map(country => (
+              <th key={country.value}>{country.flag}</th>
+            ))}
+            {selectedCountries.length > 1 && <th>{selectedCountries.map(country => country.flag).join(' + ')}</th>}
+          </tr>
+        </thead>
+        <tbody>
+          { filteredAccessResults && filteredAccessResults.length > 0 ? 
+            filteredAccessResults.map(([country, accessTypes]) => (
+            <tr key={country}>
+              <td>{getCountryFlagAndName(country)}</td>
+              {selectedCountries.map((selectedCountry: CountryOption) => (
+                <td key={selectedCountry.value}>
+                  <AccessTypeBadge access={formatAccess(accessTypes[selectedCountry.value] || 'N/A')} />
+                </td>
+              ))}
+              {selectedCountries.length > 1 && <td>
+                <AccessTypeBadge access={formatAccess(getBestAccess(Object.values(accessTypes)))} />
+              </td>}
+            </tr>
+            )) : <tr>
+              <td colSpan={selectedCountries.length + 2}>No results for your research 😥</td>
+            </tr>}
+        </tbody>
+      </table>
     </div>
   );
 }

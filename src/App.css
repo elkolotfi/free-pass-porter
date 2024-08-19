@@ -25,7 +25,6 @@
   width: 100%;
   max-width: 800px;
   margin: 0 .5rem;
-  z-index: 2;
 }
 
 .passport-select {
@@ -118,11 +117,83 @@
   box-sizing: border-box;
 }
 
+.filter-wrapper {
+  display: flex;
+  margin: .5rem;
+}
+
+.filter-wrapper button {
+  display: flex;
+  align-content: center;
+  justify-items: center;
+  gap: .5rem;
+  padding: .5rem;
+  border-radius: 6px;
+  border: solid thin #ffffff;
+  cursor: pointer;
+}
+
+.filter-body {
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
+  background-color: #ddd;
+  padding: .5rem 1rem;
+  width: 100%;
+}
+
+.filter-title {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filter-title button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 2rem;
+}
+
 .footer {
   margin-top: 2rem;
   padding: 1rem;
   background-color: rgba(255, 255, 255, 0.8);
   border-top: 1px solid #ddd;
+}
+
+.access-option {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding-left: 24px;  /* Adjust as needed */
+}
+
+.access-option::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  background-color: var(--access-color);
+}
+
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-top: 1rem;
+  margin-bottom: .5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 @media (max-width: 600px) {
