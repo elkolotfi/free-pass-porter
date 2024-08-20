@@ -69,7 +69,7 @@ export default function Home() {
         </div>
         
         { selectedCountries.length < 1 && 
-          <p>Select the passports you own or want to own and see places you can freely travel to 😌</p>
+          <strong>Select the passports you own or want to own and see places you can freely travel to 😌</strong>
         }
       </div>
       
