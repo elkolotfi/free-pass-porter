@@ -16,14 +16,27 @@
   flex: 1;
 }
 
+.head-card {
+  background-color: rgb(254 255 255 / 70%);
+  padding: 1rem 2rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  width: 100%;
+  max-width: 800px;
+}
+
 .title {
   font-size: 2.5rem;
   margin-bottom: 2rem;
 }
 
+.select-passports {
+  display: flex;
+  width: 100%;
+}
+
 .select-container {
   width: 100%;
-  max-width: 800px;
   margin: 0 .5rem;
 }
 
@@ -117,9 +130,8 @@
   box-sizing: border-box;
 }
 
-.filter-wrapper {
-  display: flex;
-  margin: .5rem;
+.filter-form {
+  width: 100%;
 }
 
 .filter-wrapper button {
@@ -193,7 +205,9 @@
 .form-group {
   display: flex;
   flex-direction: column;
+  gap: 5px;
   align-items: center;
+  margin: 1rem 0;
 }
 
 @media (max-width: 600px) {
