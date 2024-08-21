@@ -26,7 +26,7 @@ export class PassportDataService {
     
     const passportData: PassportData = {};
     data.forEach((row: any) => {
-      const passport = row.Passport;
+      const passport = row.Passport.trim();
       delete row.Passport;
       passportData[passport] = row;
     });
@@ -91,9 +91,12 @@ export class PassportDataService {
 
       return acc;
     }, {} as AccessResultsType);
-    return Object.entries(filtered).filter(([_, accessTypes]) => {
+
+    const selectedCountriesFiltered = Object.entries(filtered).filter(([_, accessTypes]) => {
       const passports = Object.entries(accessTypes).map(([passport, _]) => passport);
       return !selectedCountries.some(selectedCountry => !passports.includes(selectedCountry.value));
     });
+
+    return selectedCountriesFiltered;
   }
 }
