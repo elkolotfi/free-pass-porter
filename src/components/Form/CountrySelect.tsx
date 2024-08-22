@@ -10,7 +10,7 @@ interface CountrySelectProps {
   placeholder?: string;
 }
 
-export function CountrySelect({ onChange, reload = 0, placeholder = 'Select your passports countries...' }: CountrySelectProps) {
+export default function CountrySelect({ onChange, reload = 0, placeholder = 'Select your passports countries...' }: CountrySelectProps) {
   const [selectedCountries, setSelectedCountries] = useState<CountryOption[]>([]);
 
   const customStyles: StylesConfig<CountryOption, true> = {
@@ -53,7 +53,7 @@ export function CountrySelect({ onChange, reload = 0, placeholder = 'Select your
   };
   
   return (
-    <div className="select-container">
+    <div className="select-container" data-testid="country-select">
       <Select
         isMulti
         options={availableCountries}

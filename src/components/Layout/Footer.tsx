@@ -1,6 +1,6 @@
 import { FaExternalLinkAlt, FaGithub } from "react-icons/fa";
 
-export function Footer() {
+export default function Footer() {
   return (
     <footer className="footer">
       <p>&copy; 2024 Free Pass Porter.</p>

@@ -12,8 +12,8 @@ export class CountryService {
     return CountryService.INSTANCE;
   }
 
-  getCountryFlagAndName(country: string): string {
-    const Tcountry = countries[country as keyof typeof countries];
-    return Tcountry ? `${getEmojiFlag(country as TCountryCode)} ${Tcountry.name}` : country;
+  getCountryFlagAndName(countryCode: string): string {
+    const Tcountry = countries[countryCode as keyof typeof countries];
+    return Tcountry ? `${getEmojiFlag(countryCode as TCountryCode)} ${Tcountry.name}` : countryCode;
   }
 }

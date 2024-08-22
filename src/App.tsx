@@ -1,7 +1,6 @@
-
 import './App.css';
-import { Footer } from './components/Layout/Footer';
-import Home from './components/Layout/Home';
+import Footer from '@/components/Layout/Footer';
+import Home from '@/components/Layout/Home';
 
 function App() {
   return (

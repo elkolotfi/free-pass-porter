@@ -10,4 +10,11 @@ module.exports = {
   setupFilesAfterEnv: ["@testing-library/jest-dom"],
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
+  collectCoverage: true,
+  coverageDirectory: 'coverage',
+  coverageReporters: ['text', 'lcov'],
+  collectCoverageFrom: [
+    'src/**/*.{js,jsx,ts,tsx}',
+    '!src/**/*.d.ts', // Exclude type declaration files
+  ],
 };

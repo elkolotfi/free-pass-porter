@@ -19,11 +19,15 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
+    
     /* Module Alias */
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+
+    /* Jest */
+    "types": ["jest", "@testing-library/jest-dom"]
   },
   "include": ["src"]
 }

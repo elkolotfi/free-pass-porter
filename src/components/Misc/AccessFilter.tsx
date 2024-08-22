@@ -1,5 +1,5 @@
 import { AccessSelect } from "@/components/Form/AccessSelect";
-import { CountrySelect } from "@/components/Form/CountrySelect";
+import CountrySelect from "@/components/Form/CountrySelect";
 import { AccessOption } from "@/types/access-option.type";
 import { CountryOption } from "@/types/country-option.type";
 import { useEffect, useState } from "react";

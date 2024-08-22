@@ -1,9 +1,9 @@
-import { CountrySelect } from '@/components/Form/CountrySelect';
+import CountrySelect from '@/components/Form/CountrySelect';
 import { AccessResults, AccessResultsType } from '@/components/Misc/AccessResults';
 import { CountryOption } from '@/types/country-option.type';
 import { useEffect, useState } from 'react';
 import { FaFilter, FaPassport, FaPlane } from 'react-icons/fa';
-import AccessFilter, { TableFilters } from '../Misc/AccessFilter';
+import AccessFilter, { TableFilters } from '@/components/Misc/AccessFilter';
 import { FaFilterCircleXmark } from 'react-icons/fa6';
 import { PassportData } from '@/types/types';
 import { PassportDataService } from '@/services/passport-data.service';
@@ -59,10 +59,14 @@ export default function Home() {
               onChange={handleChange}
             />
             { selectedCountries.length > 0 && !showFilters &&
-              <button type="button" onClick={() => setShowFilters(true)}><FaFilter /></button>
+              <button type="button" data-testid="show-filters-button" onClick={() => setShowFilters(true)}>
+                <FaFilter />
+              </button>
             }
             { selectedCountries.length > 0 && showFilters &&
-              <button type="button" onClick={() => setShowFilters(false)}><FaFilterCircleXmark /></button>
+              <button type="button" data-testid="hide-filters-button" onClick={() => setShowFilters(false)}>
+                <FaFilterCircleXmark />
+              </button>
             }
           </div>
           { showFilters && <AccessFilter selectedCountries={selectedCountries} getTableFilters={getTableFilters} /> }
