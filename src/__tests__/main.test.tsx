@@ -1,6 +1,4 @@
-import { render } from '@testing-library/react';
 import { StrictMode } from 'react';
-import React from 'react';
 
 // Mock the createRoot function
 jest.mock('react-dom/client', () => ({

@@ -5,7 +5,7 @@ import { AccessType, FilteredResultsType, PassportData } from '@/types/types';
 import Papa from 'papaparse';
 import { AccessTypeService } from './access-type.service';
 
-const PASSPORT_FILE_PATH = '/src/data/passport-index-matrix-iso2.csv';
+const PASSPORT_FILE_PATH = '/data/passport-index-matrix-iso2.csv';
 
 export class PassportDataService {
   private static INSTANCE: PassportDataService;
