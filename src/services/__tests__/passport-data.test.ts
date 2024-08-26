@@ -5,6 +5,7 @@ import { mockFetch } from '@/utils/__mocks__/fetch.mock';
 import { AccessResultsType } from '@/components/Misc/AccessResults';
 import { TableFilters } from '@/components/Misc/AccessFilter';
 import { CountryOption } from '@/types/country-option.type';
+import { COUNTRY_OPTION_DE, COUNTRY_OPTION_FR, COUNTRY_OPTION_JP, COUNTRY_OPTION_UK, COUNTRY_OPTION_US } from '@/__mocks__/countries.mock';
 
 
 describe('PassportDataService', () => {
@@ -59,7 +60,7 @@ describe('PassportDataService', () => {
     const mockPassportData: PassportData = {
       US: { FR: '90', DE: 'e-visa', UK: 'visa-free', JP: 'visa required', US: '-1' },
       UK: { FR: '90', DE: '90', US: 'visa-free', JP: 'visa required', UK: '-1' },
-      JP: { FR: '90', DE: 'e-visa', UK: 'visa-free', US: '90', JP: '-1' }
+      JP: { FR: '90', DE: 'e-visa', UK: 'visa-free', US: '90' }
     };
 
     it('should correctly process passport data for multiple countries', () => {
@@ -126,12 +127,6 @@ describe('PassportDataService', () => {
   });
 
   describe('filterAccessResults', () => {
-    const COUNTRY_OPTION_US: CountryOption = { label: 'United States', value: 'US', flag: '🇺🇸' };
-    const COUNTRY_OPTION_UK: CountryOption = { label: 'United Kingdom', value: 'UK', flag: '🇬🇧' };
-    const COUNTRY_OPTION_JP: CountryOption = { label: 'Japan', value: 'JP', flag: '🇯🇵' };
-    const COUNTRY_OPTION_FR: CountryOption = { label: 'France', value: 'FR', flag: '🇫🇷' };
-    const COUNTRY_OPTION_DE: CountryOption = { label: 'Germany', value: 'DE', flag: '🇩🇪' };
-
     const mockSelectedCountries: CountryOption[] = [
       COUNTRY_OPTION_US, COUNTRY_OPTION_UK, COUNTRY_OPTION_JP
     ];
@@ -144,7 +139,7 @@ describe('PassportDataService', () => {
     };
   
   
-    it('should filter by countries', () => {
+    it('should filter by selected countries', () => {
       // Mock Table filters (filter by countries)
       const mockTableFilters: TableFilters = {
         countries: [COUNTRY_OPTION_US, COUNTRY_OPTION_UK],
@@ -192,10 +187,6 @@ describe('PassportDataService', () => {
         expect(country).toBe(COUNTRY_OPTION_UK.value);
         expect(destinations).toEqual(mockAccessResults.UK);
       }
-    });
-  
-    it('should filter by selected countries', () => {
-      // Verify that the function only returns countries that have at least one passport in the selectedCountries
     });
   
     it('should return an empty array if all countries are filtered out', () => {

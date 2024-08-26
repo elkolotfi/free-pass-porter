@@ -12,14 +12,8 @@ export default function AccessTypeShow({ access }: AccessTypeProps) {
       style={{
         backgroundColor,
         color: '#FFF',
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
         padding: '4px',
-        borderRadius: '4px',
-        fontSize: '0.9em',
+        fontSize: '1rem',
       }}
     >
       {access}

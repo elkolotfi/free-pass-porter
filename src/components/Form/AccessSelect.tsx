@@ -35,12 +35,14 @@ export function AccessSelect({ onChange, placeholder = 'Filter by access level..
     setSelectedAccessTypes(selected as AccessOption[]);
     onChange(selected);
   };
+
+  const options = Object.keys(accessTypes).map(a => ({ value: a } as AccessOption));
   
   return (
-    <div className="select-container">
+    <div className="select-container" data-testid="select-component">
       <Select
         isMulti={true}
-        options={Object.keys(accessTypes).map(a => ({ value: a } as AccessOption))}
+        options={options}
         value={selectedAccessTypes}
         onChange={handleChange}
         className="access-select"

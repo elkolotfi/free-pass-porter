@@ -61,10 +61,6 @@ export class PassportDataService {
     tableFilters: TableFilters,
     selectedCountries: CountryOption[]
   ): FilteredResultsType[] | null {
-    if (!accessResults) {
-      return null;
-    }
-
     const filtered = Object.entries(accessResults).reduce((acc, [country, passports]) => {
       // Filter by countries
       if (tableFilters.countries.length > 0 && !tableFilters.countries.some(c => c.value === country)) {
