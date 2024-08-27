@@ -20,7 +20,7 @@ export function AccessTable({ accessResults, selectedCountries, tableFilters }: 
 
   const filteredAccessResults = useMemo(() => {
     return passportDataService.filterAccessResults(accessResults, tableFilters, selectedCountries);
-  }, [tableFilters, accessResults]);
+  }, [tableFilters, accessResults, passportDataService, selectedCountries]);
 
 
   const countDestinations = useMemo(() => {

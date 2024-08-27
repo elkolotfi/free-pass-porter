@@ -29,7 +29,7 @@ export function AccessSelect({ onChange, placeholder = 'Filter by access level..
   useEffect(() => {
     setSelectedAccessTypes([]);
     onChange([]);
-  }, [reload]);
+  }, [reload, onChange]);
 
   const handleChange = (selected: readonly AccessOption[]) => {
     setSelectedAccessTypes(selected as AccessOption[]);

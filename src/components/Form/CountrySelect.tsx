@@ -31,7 +31,7 @@ export default function CountrySelect({ onChange, reload = 0, placeholder = 'Sel
   useEffect(() => {
     setSelectedCountries([]);
     onChange([]);
-  }, [reload]);
+  }, [reload, onChange]);
 
   const countryList: CountryOption[] = useMemo(() => {
     return Object.entries(countries).map(([code, country]) => ({

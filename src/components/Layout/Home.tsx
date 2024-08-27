@@ -1,7 +1,7 @@
 import CountrySelect from '@/components/Form/CountrySelect';
 import { AccessResults, AccessResultsType } from '@/components/Misc/AccessResults';
 import { CountryOption } from '@/types/country-option.type';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FaFilter, FaPassport, FaPlane } from 'react-icons/fa';
 import AccessFilter, { TableFilters } from '@/components/Misc/AccessFilter';
 import { FaFilterCircleXmark } from 'react-icons/fa6';
@@ -32,9 +32,9 @@ export default function Home() {
 
   useEffect(() => {
     passportDataService.getPassportData().then(setPassportData);
-  }, []);
+  }, [passportDataService]);
 
-  const handleChange = (selected: readonly CountryOption[]) => {
+  const handleChange = useCallback((selected: readonly CountryOption[]) => {
     setSelectedCountries(selected as CountryOption[]);
     if (selected.length > 0 && passportData) {
       const countryAccessTypes = passportDataService.getCountryAccessTypes(selected.map(c => c.value), passportData);
@@ -42,11 +42,11 @@ export default function Home() {
     } else {
       setAccessResults(null);
     }
-  };
+  }, [passportData, passportDataService]);
 
-  function getTableFilters(filters: TableFilters) {
+  const getTableFilters = useCallback((filters: TableFilters) => {
     setTableFilters(filters);
-  }
+  }, []);
 
   return (
     <div className="home">

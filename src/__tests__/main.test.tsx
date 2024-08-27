@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import { StrictMode } from 'react';
 
 // Mock the createRoot function

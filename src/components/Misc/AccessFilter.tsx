@@ -2,7 +2,7 @@ import { AccessSelect } from "@/components/Form/AccessSelect";
 import CountrySelect from "@/components/Form/CountrySelect";
 import { AccessOption } from "@/types/access-option.type";
 import { CountryOption } from "@/types/country-option.type";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FaRotate } from "react-icons/fa6";
 
 export type AccessFilters = { [passport: string]: readonly AccessOption[] }
@@ -27,7 +27,7 @@ export default function AccessFilter({ selectedCountries, getTableFilters }: Pro
     if (tableFilters) {
       getTableFilters(tableFilters);
     }
-  }, [tableFilters]);
+  }, [tableFilters, getTableFilters]);
 
   function reset() {
     setTableFilters({
@@ -36,11 +36,16 @@ export default function AccessFilter({ selectedCountries, getTableFilters }: Pro
     setReload(Math.random());
   }
 
+  const handleCountryChange = useCallback(
+    (selected: readonly CountryOption[]) => setTableFilters({ ...tableFilters, countries: selected }),
+    [tableFilters]
+  );
+
   return <form className="filter-form">
     <div className="form-group">
       <label htmlFor="filter-country">Destination countries</label>
       <CountrySelect
-        onChange={selected => setTableFilters({ ...tableFilters, countries: selected })}
+        onChange={handleCountryChange}
         reload={reload}
         placeholder="Filter your destination countries..."
       />

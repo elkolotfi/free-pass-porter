@@ -1,7 +1,7 @@
 import { TableFilters } from '@/components/Misc/AccessFilter';
 import { AccessResultsType } from '@/components/Misc/AccessResults';
 import { CountryOption } from '@/types/country-option.type';
-import { AccessType, FilteredResultsType, PassportData } from '@/types/types';
+import { AccessType, CountryRow, FilteredResultsType, PassportData } from '@/types/types';
 import Papa from 'papaparse';
 import { AccessTypeService } from './access-type.service';
 
@@ -25,10 +25,14 @@ export class PassportDataService {
     const { data } = Papa.parse(csv, { header: true });
     
     const passportData: PassportData = {};
-    data.forEach((row: any) => {
-      const passport = row.Passport.trim();
-      delete row.Passport;
-      passportData[passport] = row;
+    
+    data.forEach((row: unknown) => {
+      const passport = (row as CountryRow).Passport as string;
+      if (passport) {
+        const countryRow: CountryRow = { ...(row as CountryRow) };
+        delete countryRow.Passport;
+        passportData[passport.trim()] = countryRow;
+      }
     });
     
     return passportData;
@@ -88,8 +92,8 @@ export class PassportDataService {
       return acc;
     }, {} as AccessResultsType);
 
-    const selectedCountriesFiltered = Object.entries(filtered).filter(([_, accessTypes]) => {
-      const passports = Object.entries(accessTypes).map(([passport, _]) => passport);
+    const selectedCountriesFiltered = Object.entries(filtered).filter(([, accessTypes]) => {
+      const passports = Object.entries(accessTypes).map(([passport]) => passport);
       return !selectedCountries.some(selectedCountry => !passports.includes(selectedCountry.value));
     });
 

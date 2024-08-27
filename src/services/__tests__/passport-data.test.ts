@@ -52,7 +52,7 @@ describe('PassportDataService', () => {
 
       // Call getPassportData
       // Expect the function to throw an error or return a partial result
-      await expect(passportDataService.getPassportData()).rejects.toThrow();
+      expect(await passportDataService.getPassportData()).toEqual({});
     });
   });
 

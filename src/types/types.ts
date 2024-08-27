@@ -1,5 +1,9 @@
+export interface CountryRow {
+  [countryCode: string]: string;
+}
+
 export interface PassportData {
-  [country: string]: { [country: string]: string };
+  [passportCountry: string]: CountryRow;
 }
 
 export type AccessType = number | string;

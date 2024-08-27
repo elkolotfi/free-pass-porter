@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import { mockAccessTable } from '@/__mocks__/components.mock';
 import { COUNTRY_OPTION_CA, COUNTRY_OPTION_UK, COUNTRY_OPTION_US } from '@/__mocks__/countries.mock';
 import { TableFilters } from '@/components/Misc/AccessFilter';
