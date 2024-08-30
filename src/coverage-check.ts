@@ -1,6 +1,6 @@
 import { runCLI } from '@jest/core';
 import type { Config } from '@jest/types';
-import existingConfig from '../jest.config.cjs';
+import existingConfig from '../jest.config';
 const coverageThreshold = process.env.COVERAGE_THRESHOLD || '80';
 
 // Ensure the coverage threshold is a valid number

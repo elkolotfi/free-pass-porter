@@ -1,4 +1,6 @@
-module.exports = {
+import type { Config } from '@jest/types';
+
+export default {
   testEnvironment: 'jsdom',
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
@@ -18,4 +20,4 @@ module.exports = {
     '!src/**/*.d.ts', // Exclude type declaration files
   ],
   coveragePathIgnorePatterns: ['/src/coverage-check.ts'],
-};
+} as Config.InitialOptions;
