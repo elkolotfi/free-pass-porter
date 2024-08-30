@@ -57,11 +57,17 @@ Our pipeline ensures:
 3. `pnpm dev` to start your local server
 4. Visit the dev URL shown on your console and start exploring!
 
+(you can use pnpm as I do or any package manager like regular npm or yarn)
+
 ## 🧪 Testing
 
 We take testing seriously around here. Run the tests with:
 
 ```bash
+npm test
+# or
+yarn test
+# or
 pnpm test
 ```
 
@@ -74,6 +80,10 @@ Got ideas? Found a bug? We're all ears! Feel free to open an issue or submit a P
 Make sure to successfully run:
 
 ```bash
+npm prebuild
+# or
+yarn prebuild
+# or
 pnpm prebuild
 ```
 

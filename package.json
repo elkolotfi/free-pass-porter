@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "check-coverage": "tsx src/coverage-check.ts",
-    "prebuild": "pnpm run lint && pnpm run check-coverage"
+    "prebuild": "run-s lint check-coverage"
   },
   "dependencies": {
     "@types/react-select": "^5.0.1",
@@ -49,6 +49,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "jsdom": "^24.1.1",
+    "npm-run-all": "^4.1.5",
     "prettier": "^3.3.3",
     "ts-jest": "^29.2.4",
     "tsx": "^4.19.0",
