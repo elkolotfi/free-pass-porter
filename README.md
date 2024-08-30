@@ -31,7 +31,7 @@ Notable tools and libraries:
 
 ## 🏗️ CI/CD Pipeline
 
-We've got a slick CI/CD pipeline set up with GitHub Actions and Cloudflare Pages:
+We've got a slick CI/CD pipeline set up with GitHub Actions and Firebase Hosting:
 
 ```mermaid
 graph LR
@@ -39,7 +39,7 @@ graph LR
     B --> C{Run Tests}
     C -->|Pass| D[Build Project]
     C -->|Fail| E[Notify Developer]
-    D --> F[Deploy to Cloudflare Pages]
+    D --> F[Deploy to Firebase Hosting]
     F --> G[Site Live!]
 ```
 
@@ -48,7 +48,7 @@ Our pipeline ensures:
 - 🧪 All tests pass
 - 📊 Code coverage is at least 80%
 - 🚦 Linting checks are green
-- 🚀 Automatic deployment to Cloudflare Pages
+- 🚀 Automatic deployment to Firebase Hosting
 
 ## 🚀 Getting Started
 
