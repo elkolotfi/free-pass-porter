@@ -36,15 +36,21 @@ export default function AccessFilter({ selectedCountries, getTableFilters }: Pro
     setReload(Math.random());
   }
 
-  const handleCountryChange = useCallback(
-    (selected: readonly CountryOption[]) => setTableFilters({ ...tableFilters, countries: selected }),
-    [tableFilters]
-  );
+  const handleCountryChange = 
+    (selected: readonly CountryOption[]) => setTableFilters({ ...tableFilters, countries: selected });
+
+  const handleAccessChange = 
+    (selected: readonly AccessOption[], country: CountryOption) => {
+      const newAccessFilters: AccessFilters = { ...tableFilters.accessFilters };
+      newAccessFilters[country.value] = selected;
+      setTableFilters({ ...tableFilters, accessFilters: newAccessFilters });
+    }
 
   return <form className="filter-form">
     <div className="form-group">
       <label htmlFor="filter-country">Destination countries</label>
       <CountrySelect
+        key={reload}
         onChange={handleCountryChange}
         reload={reload}
         placeholder="Filter your destination countries..."
@@ -54,12 +60,8 @@ export default function AccessFilter({ selectedCountries, getTableFilters }: Pro
       selectedCountries.map((country, id) => <div className="form-group" key={id}>
         <label>{country.flag}</label>
         <AccessSelect
-          onChange={selected => {
-            const newAccessFilters: AccessFilters = { ...tableFilters.accessFilters };
-            newAccessFilters[country.value] = selected;
-            setTableFilters({ ...tableFilters, accessFilters: newAccessFilters });
-          }}
-          reload={reload}
+          key={reload}
+          onChange={selected => handleAccessChange(selected, country)}
         />
       </div>)
     }

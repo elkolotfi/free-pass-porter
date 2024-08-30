@@ -29,8 +29,7 @@ describe('CountrySelect Component', () => {
   it('renders options correctly', () => {
     render(<CountrySelect onChange={mockOnChange} />);
     
-    expect(mockOnChange).toHaveBeenCalledTimes(1);
-    expect(mockOnChange).toHaveBeenCalledWith([]);
+    expect(mockOnChange).toHaveBeenCalledTimes(0);
 
     const selectContainer = screen.getByTestId('country-select');
     expect(selectContainer).toBeInTheDocument();
@@ -46,30 +45,33 @@ describe('CountrySelect Component', () => {
   it('calls onChange when an option is selected', () => {
     render(<CountrySelect onChange={mockOnChange} />);
 
-    expect(mockOnChange).toHaveBeenCalledTimes(1);
-    expect(mockOnChange).toHaveBeenCalledWith([]);
+    expect(mockOnChange).toHaveBeenCalledTimes(0);
 
     const selectContainer = screen.getByTestId('country-select');
     fireEvent.keyDown(selectContainer.firstChild as Element, { key: 'ArrowDown' });
     fireEvent.click(screen.getByText('United States'));
 
-    expect(mockOnChange).toHaveBeenCalledTimes(2);
+    expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith([expect.objectContaining({ label: 'United States' })]);
   });
 
   it('clears selection when reload prop changes', () => {
-    const { rerender } = render(<CountrySelect onChange={mockOnChange} reload={0} />);
+    let reload = 0;
+    const { rerender } = render(<CountrySelect key={reload} onChange={mockOnChange} />);
     
     const selectContainer = screen.getByTestId('country-select');
     fireEvent.keyDown(selectContainer.firstChild as Element, { key: 'ArrowDown' });
+    
+    expect(screen.getByText('United States')).toBeInTheDocument();
+
     fireEvent.click(screen.getByText('United States'));
+    expect(mockOnChange).toHaveBeenCalledTimes(1);
+    expect(mockOnChange).toHaveBeenCalledWith([expect.objectContaining({ label: 'United States' })]);
 
-    expect(mockOnChange).toHaveBeenCalledTimes(2);
-    expect(mockOnChange).toHaveBeenLastCalledWith([expect.objectContaining({ label: 'United States' })]);
+    reload = 1;
+    rerender(<CountrySelect key={reload} onChange={mockOnChange} />);
 
-    rerender(<CountrySelect onChange={mockOnChange} reload={1} />);
-
-    expect(mockOnChange).toHaveBeenCalledTimes(3);
-    expect(mockOnChange).toHaveBeenLastCalledWith([]);
+    
+    expect(screen.queryByText('United States')).toBeNull();
   });
 });

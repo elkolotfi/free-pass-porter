@@ -29,10 +29,7 @@ describe('AccessSelect Component', () => {
   });
 
   it('renders options correctly', () => {
-    render(<AccessSelect onChange={mockOnChange} />);
-
-    expect(mockOnChange).toHaveBeenCalledTimes(1);
-    expect(mockOnChange).toHaveBeenCalledWith([]);
+    render(<AccessSelect key={0} onChange={mockOnChange} />);
     
     const selectContainer = screen.queryByTestId('select-component');
 
@@ -51,8 +48,7 @@ describe('AccessSelect Component', () => {
   it('calls onChange when an option is selected', async () => {
     render(<AccessSelect onChange={mockOnChange} />);
 
-    expect(mockOnChange).toHaveBeenCalledTimes(1);
-    expect(mockOnChange).toHaveBeenCalledWith([]);
+    expect(mockOnChange).toHaveBeenCalledTimes(0);
     
     const selectContainer = screen.queryByTestId('select-component');
 
@@ -60,7 +56,7 @@ describe('AccessSelect Component', () => {
       fireEvent.keyDown(selectContainer.firstChild, { key: 'ArrowDown' });
       fireEvent.click(screen.getByText('visa free'));
 
-      expect(mockOnChange).toHaveBeenCalledTimes(2);
+      expect(mockOnChange).toHaveBeenCalledTimes(1);
       expect(mockOnChange).toHaveBeenCalledWith([{ value: 'visa free' }]); 
     } else {
       fail('select container was not found or has not child');

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Select, { StylesConfig } from 'react-select';
 import { AccessOption, accessTypes } from '@/types/access-option.type';
 
@@ -8,7 +8,7 @@ interface AccessSelectProps {
   placeholder?: string;
 }
 
-export function AccessSelect({ onChange, placeholder = 'Filter by access level...', reload = 0 }: AccessSelectProps) {
+export function AccessSelect({ onChange, placeholder = 'Filter by access level...' }: AccessSelectProps) {
   const [selectedAccessTypes, setSelectedAccessTypes] = useState<AccessOption[]>([]);
 
   const customStyles: StylesConfig<AccessOption, true> = {
@@ -25,11 +25,6 @@ export function AccessSelect({ onChange, placeholder = 'Filter by access level..
       zIndex: 2,
     }),
   };
-
-  useEffect(() => {
-    setSelectedAccessTypes([]);
-    onChange([]);
-  }, [reload, onChange]);
 
   const handleChange = (selected: readonly AccessOption[]) => {
     setSelectedAccessTypes(selected as AccessOption[]);
