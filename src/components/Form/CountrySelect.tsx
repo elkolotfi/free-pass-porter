@@ -10,7 +10,7 @@ interface CountrySelectProps {
   placeholder?: string;
 }
 
-export default function CountrySelect({ onChange, reload = 0, placeholder = 'Select your passports countries...' }: CountrySelectProps) {
+export default function CountrySelect({ onChange, reload = 0, placeholder = 'Select the countries of your passports...' }: CountrySelectProps) {
   const [selectedCountries, setSelectedCountries] = useState<CountryOption[]>([]);
 
   const customStyles: StylesConfig<CountryOption, true> = {

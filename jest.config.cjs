@@ -5,9 +5,9 @@ module.exports = {
   },
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
-    '\\.(css|less|scss|sass)$': 'identity-obj-proxy'
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
   },
-  setupFilesAfterEnv: ["@testing-library/jest-dom"],
+  setupFilesAfterEnv: ['@testing-library/jest-dom'],
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
   collectCoverage: true,
@@ -17,4 +17,5 @@ module.exports = {
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.d.ts', // Exclude type declaration files
   ],
+  coveragePathIgnorePatterns: ['/src/coverage-check.ts'],
 };

@@ -21,7 +21,7 @@ describe('CountrySelect Component', () => {
   });
 
   it('uses default placeholder when not provided', () => {
-    const defaultPlaceholder = 'Select your passports countries...';
+    const defaultPlaceholder = 'Select the countries of your passports...';
     render(<CountrySelect onChange={mockOnChange} />);
     expect(screen.getByText(defaultPlaceholder)).toBeInTheDocument();
   });
