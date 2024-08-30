@@ -2,7 +2,7 @@ import { AccessSelect } from "@/components/Form/AccessSelect";
 import CountrySelect from "@/components/Form/CountrySelect";
 import { AccessOption } from "@/types/access-option.type";
 import { CountryOption } from "@/types/country-option.type";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaRotate } from "react-icons/fa6";
 
 export type AccessFilters = { [passport: string]: readonly AccessOption[] }

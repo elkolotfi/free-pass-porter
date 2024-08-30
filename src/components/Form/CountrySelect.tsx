@@ -1,8 +1,8 @@
-import Select, { StylesConfig } from 'react-select';
-import { useEffect, useMemo, useState } from 'react';
+import { CountryOption } from '@/types/country-option.type';
 import { countries } from 'countries-list';
 import getCountryFlag from 'country-flag-icons/unicode';
-import { CountryOption } from '@/types/country-option.type';
+import { useMemo, useState } from 'react';
+import Select, { StylesConfig } from 'react-select';
 
 interface CountrySelectProps {
   onChange: (selected: readonly CountryOption[]) => void;
