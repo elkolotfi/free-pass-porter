@@ -1,31 +1,25 @@
+import { useAppSelector } from '@/context/hooks';
 import { AccessTypeService } from '@/services/access-type.service';
 import { CountryService } from '@/services/country.service';
-import { PassportDataService } from '@/services/passport-data.service';
 import { CountryOption } from '@/types/country-option.type';
+import { FilteredResultsType } from '@/types/types';
 import { useMemo } from 'react';
-import { TableFilters } from './AccessFilter';
-import { AccessResultsType } from './AccessResults';
 import AccessTypeBadge from './AccessTypeShow';
 
 interface AccessTableProps {
-  accessResults: AccessResultsType;
-  selectedCountries: CountryOption[];
-  tableFilters: TableFilters;
+  accessResults: FilteredResultsType[];
 }
 
-export function AccessTable({ accessResults, selectedCountries, tableFilters }: AccessTableProps) {
-  const passportDataService = PassportDataService.getInstance(AccessTypeService.getInstance());
+export function AccessTable({ accessResults }: AccessTableProps) {
   const countryService = CountryService.getInstance();
   const accessTypeService = AccessTypeService.getInstance();
 
-  const filteredAccessResults = useMemo(() => {
-    return passportDataService.filterAccessResults(accessResults, tableFilters, selectedCountries);
-  }, [tableFilters, accessResults, passportDataService, selectedCountries]);
+  const selectedCountries = useAppSelector((state) => state.search.countries);
 
 
   const countDestinations = useMemo(() => {
-    return filteredAccessResults ? Object.keys(filteredAccessResults).length : 0
-  }, [filteredAccessResults]);
+    return accessResults ? Object.keys(accessResults).length : 0
+  }, [accessResults]);
 
   return (
     <div className="table-wrapper">
@@ -42,8 +36,8 @@ export function AccessTable({ accessResults, selectedCountries, tableFilters }: 
           </tr>
         </thead>
         <tbody>
-          { filteredAccessResults && filteredAccessResults.length > 0 ? 
-            filteredAccessResults.map(([country, accessTypes]) => (
+          { accessResults && accessResults.length > 0 ? 
+            accessResults.map(([country, accessTypes]) => (
             <tr key={country}>
               <td>{countryService.getCountryFlagAndName(country)}</td>
               {selectedCountries.map((selectedCountry: CountryOption) => (

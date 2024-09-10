@@ -13,6 +13,7 @@
     "prebuild": "run-s lint check-coverage"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.2.7",
     "@types/react-select": "^5.0.1",
     "countries-list": "^3.1.1",
     "country-flag-icons": "^1.5.13",
@@ -20,6 +21,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.3.0",
+    "react-redux": "^9.1.2",
     "react-select": "^5.8.0"
   },
   "devDependencies": {

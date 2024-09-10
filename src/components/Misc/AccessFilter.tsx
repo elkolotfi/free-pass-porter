@@ -1,49 +1,45 @@
 import { AccessSelect } from "@/components/Form/AccessSelect";
 import CountrySelect from "@/components/Form/CountrySelect";
+import { useAppDispatch, useAppSelector } from "@/context/hooks";
+import { setTableFilters } from "@/context/slices/search.slice";
 import { AccessOption } from "@/types/access-option.type";
 import { CountryOption } from "@/types/country-option.type";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaRotate } from "react-icons/fa6";
 
-export type AccessFilters = { [passport: string]: readonly AccessOption[] }
+export type AccessFilters = { [passport: string]: AccessOption[] }
 
 export interface TableFilters {
-  countries: readonly CountryOption[];
-  accessFilters: AccessFilters
+  countries: CountryOption[];
+  accessFilters: AccessFilters;
 }
 
 interface Props {
   selectedCountries: CountryOption[];
-  getTableFilters: (filters: TableFilters) => void;
 }
 
-export default function AccessFilter({ selectedCountries, getTableFilters }: Props) {
+export default function AccessFilter({ selectedCountries }: Props) {
   const [reload, setReload] = useState(0);
-  const [tableFilters, setTableFilters] = useState<TableFilters>({
-    countries: [], accessFilters: {}
-  });
-
-  useEffect(() => {
-    if (tableFilters) {
-      getTableFilters(tableFilters);
-    }
-  }, [tableFilters, getTableFilters]);
+  const filters = useAppSelector(state => state.search.filters);
+  const dispatch = useAppDispatch();
 
   function reset() {
-    setTableFilters({
+    dispatch(setTableFilters({
       countries: [], accessFilters: {}
-    });
+    }));
     setReload(Math.random());
   }
 
   const handleCountryChange = 
-    (selected: readonly CountryOption[]) => setTableFilters({ ...tableFilters, countries: selected });
+    (selected: readonly CountryOption[]) => {
+      dispatch(setTableFilters({ ...filters, countries: [...selected] }));
+    }
 
   const handleAccessChange = 
     (selected: readonly AccessOption[], country: CountryOption) => {
-      const newAccessFilters: AccessFilters = { ...tableFilters.accessFilters };
-      newAccessFilters[country.value] = selected;
-      setTableFilters({ ...tableFilters, accessFilters: newAccessFilters });
+      const newAccessFilters: AccessFilters = { ...filters.accessFilters };
+      newAccessFilters[country.value] = [...selected];
+      dispatch(setTableFilters({ ...filters, accessFilters: newAccessFilters }));
     }
 
   return <form className="filter-form">

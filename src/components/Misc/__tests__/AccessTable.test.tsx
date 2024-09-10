@@ -1,21 +1,18 @@
-import { COUNTRY_OPTION_UK, COUNTRY_OPTION_US } from '@/__mocks__/countries.mock';
-import { TableFilters } from '@/components/Misc/AccessFilter';
-import { AccessResultsType } from '@/components/Misc/AccessResults';
+import { COUNTRY_OPTION_CA, COUNTRY_OPTION_FR, COUNTRY_OPTION_UK, COUNTRY_OPTION_US } from '@/__mocks__/countries.mock';
 import { AccessTable } from '@/components/Misc/AccessTable';
+import { setSelectedCountries } from '@/context/slices/search.slice';
+import store from '@/context/store';
 import { AccessTypeService } from '@/services/access-type.service';
 import { CountryService } from '@/services/country.service';
-import { PassportDataService } from '@/services/passport-data.service';
-import { CountryOption } from '@/types/country-option.type';
+import { FilteredResultsType } from '@/types/types';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
+import { Provider } from 'react-redux';
 
 // Mock the services
-jest.mock('@/services/passport-data.service');
 jest.mock('@/services/country.service');
 jest.mock('@/services/access-type.service');
 
-
-// const fn = ({ access }: { access: string }) => (<span data-testid="access-type-badge">{access}</span>)
 // Mock the AccessTypeBadge component
 jest.mock('@/components/Misc/AccessTypeShow', () => ({
   __esModule: true,
@@ -23,31 +20,17 @@ jest.mock('@/components/Misc/AccessTypeShow', () => ({
 }));
 
 describe('AccessTable Component', () => {
-  const mockAccessResults: AccessResultsType = {
-    CA: { US: 'visa free', UK: 'visa free' },
-    FR: { US: 'visa required', UK: 'visa free' },
-  };
-
-  const mockSelectedCountries: CountryOption[] = [COUNTRY_OPTION_US, COUNTRY_OPTION_UK];
-
-  const mockTableFilters: TableFilters = {
-    countries: [],
-    accessFilters: {}
-  };
-
-  const mockFilteredResults = [
-    ['CA', { US: 'visa free', UK: 'visa free' }],
-    ['FR', { US: 'visa required', UK: 'visa free' }],
+  const mockFilteredResults: FilteredResultsType[] = [
+    [COUNTRY_OPTION_CA.value, { [COUNTRY_OPTION_US.value]: 'visa free', [COUNTRY_OPTION_UK.value]: 'visa free' }],
+    [COUNTRY_OPTION_FR.value, { [COUNTRY_OPTION_US.value]: 'visa required', [COUNTRY_OPTION_UK.value]: 'visa free' }],
   ];
+
+  const mockSelectedCountries = [COUNTRY_OPTION_US, COUNTRY_OPTION_UK];
 
   beforeEach(() => {
     jest.clearAllMocks();
 
     // Mock the service methods
-    (PassportDataService.getInstance as jest.Mock).mockReturnValue({
-      filterAccessResults: jest.fn().mockReturnValue(mockFilteredResults),
-    });
-
     (CountryService.getInstance as jest.Mock).mockReturnValue({
       getCountryFlagAndName: jest.fn((country) => `${country} Flag and Name`),
     });
@@ -56,95 +39,66 @@ describe('AccessTable Component', () => {
       formatAccess: jest.fn((access) => access),
       getBestAccess: jest.fn(() => 'visa free'),
     });
+
+    // Reset the Redux store
+    store.dispatch(setSelectedCountries(mockSelectedCountries));
   });
 
-  it('renders without crashing', () => {
-    render(
-      <AccessTable
-        accessResults={mockAccessResults}
-        selectedCountries={mockSelectedCountries}
-        tableFilters={mockTableFilters}
-      />
+  const renderWithProvider = (accessResults: FilteredResultsType[]) => {
+    return render(
+      <Provider store={store}>
+        <AccessTable accessResults={accessResults} />
+      </Provider>
     );
+  };
+
+  it('renders without crashing', () => {
+    renderWithProvider(mockFilteredResults);
     expect(screen.getByRole('table')).toBeInTheDocument();
   });
 
   it('renders correct number of columns', () => {
-    render(
-      <AccessTable
-        accessResults={mockAccessResults}
-        selectedCountries={mockSelectedCountries}
-        tableFilters={mockTableFilters}
-      />
-    );
+    renderWithProvider(mockFilteredResults);
     const headerCells = screen.getAllByRole('columnheader');
     // +1 for destination country, +1 for combined access
     expect(headerCells).toHaveLength(mockSelectedCountries.length + 2);
   });
 
   it('renders correct number of rows', () => {
-    render(
-      <AccessTable
-        accessResults={mockAccessResults}
-        selectedCountries={mockSelectedCountries}
-        tableFilters={mockTableFilters}
-      />
-    );
+    renderWithProvider(mockFilteredResults);
     const rows = screen.getAllByRole('row');
     // +1 for header row
     expect(rows).toHaveLength(mockFilteredResults.length + 1);
   });
 
   it('displays correct country flags in header', () => {
-    render(
-      <AccessTable
-        accessResults={mockAccessResults}
-        selectedCountries={mockSelectedCountries}
-        tableFilters={mockTableFilters}
-      />
-    );
+    renderWithProvider(mockFilteredResults);
     mockSelectedCountries.forEach(country => {
       expect(screen.getByText(country.flag)).toBeInTheDocument();
     });
   });
 
   it('displays correct access types', () => {
-    render(
-      <AccessTable
-        accessResults={mockAccessResults}
-        selectedCountries={mockSelectedCountries}
-        tableFilters={mockTableFilters}
-      />
-    );
+    renderWithProvider(mockFilteredResults);
     const accessBadges = screen.getAllByTestId('access-type-badge');
     expect(accessBadges).toHaveLength(mockFilteredResults.length * (mockSelectedCountries.length + 1));
   });
 
   it('displays "No results" message when no results are available', () => {
-    (PassportDataService.getInstance as jest.Mock)().filterAccessResults.mockReturnValue([]);
-    render(
-      <AccessTable
-        accessResults={mockAccessResults}
-        selectedCountries={mockSelectedCountries}
-        tableFilters={mockTableFilters}
-      />
-    );
+    renderWithProvider([]);
     expect(screen.getByText('No results for your research 😥')).toBeInTheDocument();
   });
 
-  it('calls filterAccessResults with correct parameters', () => {
-    render(
-      <AccessTable
-        accessResults={mockAccessResults}
-        selectedCountries={mockSelectedCountries}
-        tableFilters={mockTableFilters}
-      />
-    );
-    expect(PassportDataService.getInstance(AccessTypeService.getInstance()).filterAccessResults)
-      .toHaveBeenCalledWith(
-        mockAccessResults,
-        mockTableFilters,
-        mockSelectedCountries
-      );
+  it('calls country service methods', () => {
+    renderWithProvider(mockFilteredResults);
+    const countryService = CountryService.getInstance();
+    expect(countryService.getCountryFlagAndName).toHaveBeenCalledTimes(mockFilteredResults.length);
+  });
+
+  it('calls access type service methods', () => {
+    renderWithProvider(mockFilteredResults);
+    const accessTypeService = AccessTypeService.getInstance();
+    expect(accessTypeService.formatAccess).toHaveBeenCalled();
+    expect(accessTypeService.getBestAccess).toHaveBeenCalled();
   });
 });
